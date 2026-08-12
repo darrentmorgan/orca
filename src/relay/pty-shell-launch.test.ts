@@ -181,6 +181,9 @@ describe('getRelayShellLaunchConfig', () => {
       expect(config.args).toEqual(['-l'])
       expect(config.env.ZDOTDIR).toBe(zshRoot)
       expect(config.env.ORCA_SHELL_READY_MARKER).toBe('1')
+      expect(readFileSync(join(zshRoot, '.zshenv'), 'utf8')).toContain(
+        'printf "\\033]777;orca-shell-start:%s\\007" "$$"'
+      )
       expect(zlogin).toContain('zle -N zle-line-init __orca_prompt_mark')
       expect(zlogin).toContain('printf "\\033]777;orca-shell-ready\\007"')
     }
@@ -195,6 +198,7 @@ describe('getRelayShellLaunchConfig', () => {
       const bashRc = readFileSync(config.args[1] as string, 'utf8')
 
       expect(config.env.ORCA_SHELL_READY_MARKER).toBe('1')
+      expect(bashRc).toContain('printf "\\033]777;orca-shell-start:%s\\007" "$$"')
       expect(bashRc).toContain('__orca_append_prompt_command "__orca_prompt_mark"')
       expect(bashRc).toContain('printf "\\033]777;orca-shell-ready\\007"')
     }
